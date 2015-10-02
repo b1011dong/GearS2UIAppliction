@@ -18,8 +18,16 @@ typedef struct appdata{
 	Eext_Circle_Surface *circle_surface;
 } appdata_s;
 
+typedef struct _item_data
+{
+	int index;
+	Elm_Object_Item *item;
+} item_data;
+
+
 short inout_flag = 1; // 0: income, 1: outgo
 short confirm_flag = 0; // 0: default, 1: ready to confirm(send)
+
 
 static void
 win_delete_request_cb(void *data, Evas_Object *obj, void *event_info)
@@ -431,6 +439,11 @@ confirm_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	Evas_Object *entry = obj;
 
+	if( strlen( elm_entry_entry_get(entry) ) == 0)
+	{
+		return;
+	}
+
 	if(confirm_flag == DEFAULT)
 	{
 		elm_entry_text_style_user_push(entry, "DEFAULT='font_size=50 color=#fe5968 align=center'");
@@ -443,10 +456,43 @@ confirm_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 	}
 }
 
-static void
-list_item_selected_cb(void *data, Evas_Object *obj, void *event_info)
-{
 
+// from here to below is for making general list
+static char*
+_gl_text_get_cb(void *data, Evas_Object *obj, const char *part)
+{
+    const char *items[] = { "Seoul", "Tokyo", "Newyork", "Londeon", "Baijing", "Kongga", "Moscuba", "Singgapol", "Pusan", "Hongkong" };
+    item_data *id = data;
+
+    if (!strcmp(part, "elm.text")) {
+        return strdup(items[id->index]);
+    }
+
+    return NULL;
+}
+static void
+_gl_del_cb(void *data, Evas_Object *obj)
+{
+    item_data *id = data;
+    free(id);
+}
+static void
+_gl_selected_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	Elm_Object_Item *it = (Elm_Object_Item *)event_info;
+	elm_genlist_item_selected_set(it, EINA_FALSE);
+}
+static void
+list_selected_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	appdata_s *ad = (appdata_s*)data;
+
+	if( !strcmp(elm_entry_entry_get(ad->entry), "sel_0") )
+		elm_entry_entry_set(ad->entry, "sel_1");
+	else if( !strcmp(elm_entry_entry_get(ad->entry), "sel_1") )
+		elm_entry_entry_set(ad->entry, "sel_0");
+	else
+		elm_entry_entry_set(ad->entry, "sel_0");
 }
 
 /* 버튼 등의 기본 화면을 나타낼 것이다! */
@@ -462,6 +508,11 @@ create_main_view(appdata_s *ad)
 
 	Evas_Object *scroller = NULL;
 	Evas_Object *circle_scroller = NULL;
+	Evas_Object *circle_genlist = NULL;
+
+	Elm_Genlist_Item_Class *itc = elm_genlist_item_class_new();
+	Elm_Genlist_Item_Class *ttc = elm_genlist_item_class_new();
+	Elm_Genlist_Item_Class *ptc = elm_genlist_item_class_new();
 
 	int i, j;
 	char icon_path[PATH_MAX] = {0, };
@@ -472,27 +523,40 @@ create_main_view(appdata_s *ad)
 	elm_object_content_set(ad->conform, grid);
 	evas_object_show(grid);
 
+	ad->list = elm_genlist_add(grid);
+	elm_genlist_mode_set(ad->list, ELM_LIST_COMPRESS);
+	elm_genlist_item_select_mode_set(ad->list, ELM_OBJECT_SELECT_MODE_ALWAYS);
+	evas_object_smart_callback_add(ad->list, "selected", _gl_selected_cb, NULL);
 
-	ad->list = elm_list_add(grid);
-	//elm_list_horizontal_set (ad->list, EINA_TRUE);
+	ttc->item_style = "title";
+	//ttc->func.text_get = _gl_menu_title_text_get;
+	ttc->func.del = _gl_del_cb;
 
-	elm_list_item_append(ad->list, "a", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "bb", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "ccc", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaaaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaaaaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글한", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글한글", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글한글한", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글한글한글", NULL, NULL, list_item_selected_cb, NULL);
+	itc->item_style = "default";
+	itc->func.text_get = _gl_text_get_cb;
+	itc->func.del = _gl_del_cb;
+
+	ptc->item_style = "padding";
+	ptc->func.del = _gl_del_cb;
+
+	//elm_genlist_item_append(ad->list, ttc, NULL, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+	//elm_genlist_item_append(ad->list, ptc, NULL, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+
+	for(i = 0; i < 10 ; i++)
+	{
+		item_data *id = calloc(sizeof(item_data), 1);
+		id->index = i;
+		id->item = elm_genlist_item_append(ad->list, itc, id, NULL, ELM_GENLIST_ITEM_NONE, list_selected_cb, ad);
+	}
+
+	//elm_genlist_item_append(ad->list, ptc, NULL, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+
+	elm_genlist_item_class_free(itc);
+	elm_genlist_item_class_free(ttc);
+	elm_genlist_item_class_free(ptc);
 
 	evas_object_show(ad->list);
-	elm_grid_pack(grid, ad->list, 25, 56, 50, 12);
+	elm_grid_pack(grid, ad->list, 21, 56, 58, 14);
 
 /*
 	scroller = elm_scroller_add(ad->list);
@@ -502,10 +566,14 @@ create_main_view(appdata_s *ad)
 	elm_object_scroll_lock_y_set(scroller, EINA_TRUE);
 	evas_object_show(scroller);
 */
-
+/*
 	circle_scroller = eext_circle_object_scroller_add(ad->list, ad->circle_surface);
 	eext_circle_object_scroller_policy_set(circle_scroller, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_OFF);
 	eext_rotary_object_event_activated_set(circle_scroller, EINA_TRUE);
+*/
+	circle_genlist = eext_circle_object_genlist_add(ad->list, ad->circle_surface);
+	eext_circle_object_genlist_scroller_policy_set(circle_genlist, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_AUTO);
+	eext_rotary_object_event_activated_set(circle_genlist, EINA_TRUE);
 
 
 	ad->img = (Evas_Object**)malloc(sizeof(Evas_Object*) * 12);

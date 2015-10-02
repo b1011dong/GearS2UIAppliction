@@ -4,7 +4,7 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
 <Reference URI="bin%2Fgears2uiappliction">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>eh67MferVNjYSMD6vmuX8C7G3Vg8WaB5M9eJtfvAHk8=</DigestValue>
+<DigestValue>dH8KzYRpBEhZ41/xfNlX4bc7GLVr87e7iA2Cu+BW3Bg=</DigestValue>
 </Reference>
 <Reference URI="res%2Fedje%2Fgears2uiappliction.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -70,13 +70,17 @@
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
 <DigestValue>DWrvSWljCsSmjO6vYK4DPeh8Wl8IMTD1tHzRmY9D81Y=</DigestValue>
 </Reference>
+<Reference URI="shared%2Fres%2FMoneyWatchIcon.png">
+<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
+<DigestValue>GZGgrB4jCXcFsg7xkBAap40FKTbUL6RFJ6nbx8EV5wY=</DigestValue>
+</Reference>
 <Reference URI="shared%2Fres%2Fgears2uiappliction.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
 <DigestValue>1d0oEZHqPn+QzNzGIHwj9ODby6x9ggFs9uOsav6jPNs=</DigestValue>
 </Reference>
 <Reference URI="tizen-manifest.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>Tu7gkvwGnunlnUlFgLlZScYlCNoTQ03x75c8Bdys13Y=</DigestValue>
+<DigestValue>ZafCsYP6ueKyKgftBi3r+1FDxzbLzTFbZkKe+UpZ+7Q=</DigestValue>
 </Reference>
 <Reference URI="#prop">
 <Transforms>
@@ -87,9 +91,9 @@
 </Reference>
 </SignedInfo>
 <SignatureValue>
-WhWAebX5GnogE+Rk3BXy3x49bVDwKEsJqfwWhGyF+e35bMXwZ3lNfk47X/Z6+dPsFNluIRpITx0c
-mWPw9sCRt5rGpHu72SxgXaDI3cEui4Qq7Sd7KMHuw0U1HpLfxQebDi7GFJwzW8pRJT9/jFUGKfVC
-Rme6wKSTMtn2xb2U09E=
+Az5OOPbiPyaLhasviWp8qxu39vwEcBoi5vkDO5pDzh9FIPbnPQ+p3xduJby0BojQdeJD2eYz8t6d
+U1+2yzzS4jwS4Hmv5IbB6GBFQUvgMX6oS6Ey1i35fjb5QUOhxcqSgFCG1E6DtFq0Ze7Ze2ua59nA
+C3DR0jexub3TZcwH/js=
 </SignatureValue>
 <KeyInfo>
 <X509Data>
