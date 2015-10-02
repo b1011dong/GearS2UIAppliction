@@ -439,6 +439,7 @@ confirm_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 	else if(confirm_flag == READY_TO_CONFIRM)
 	{
 		/* confirm */
+		send_used_money_message("org.example.yjservice", atoi(elm_entry_entry_get(entry)), "default");
 	}
 }
 
@@ -681,6 +682,7 @@ static void
 app_control(app_control_h app_control, void *data)
 {
 	/* Handle the launch request. */
+	test_check_remote_port("org.example.yjservice");
 }
 
 static void

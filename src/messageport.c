@@ -6,6 +6,10 @@
  */
 #include "s_txtform.h"
 #include <message_port.h>
+#include <time.h>
+#include <app_control.h>
+#include <dlog.h>
+
 
 #define MESSAGE_PORT_FROM_UIAPP "m_port_uiapp"
 #define MAX_PATH 260

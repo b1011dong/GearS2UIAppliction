@@ -1,4 +1,5 @@
 #include <tizen.h>
+#include <dlog.h>
 
 typedef struct _txtForm {
 	int digit;				// 자릿수

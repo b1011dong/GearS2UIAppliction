@@ -4,7 +4,7 @@
  *  Created on: Oct 2, 2015
  *      Author: SON
  */
-#include "txtcontrol.h"
+#include "s_txtform.h"
 #include <stdlib.h>
 #define MAX_STRING_LENGTH 100
 #define RES_PATH_MAX 260
