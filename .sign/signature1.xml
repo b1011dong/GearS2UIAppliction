@@ -4,11 +4,11 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
 <Reference URI="author-signature.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>d6RmHdVbc9KN2g6YD9hqi+wiU/60lEyahF03eyxPkv0=</DigestValue>
+<DigestValue>38zK4GQFlYZ0GC4VWiE6cOsU5MxL600ArvCn9FFO7iM=</DigestValue>
 </Reference>
 <Reference URI="bin%2Fgears2uiappliction">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>44dyyjGVVxcUYDdoubSZhjE+HXsLnWTgc4h/YItWdmI=</DigestValue>
+<DigestValue>wUiC4O/iC0hdog+bxjRHQBEgn/TqmpAzpXWkYSvrr7A=</DigestValue>
 </Reference>
 <Reference URI="res%2Fedje%2Fgears2uiappliction.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -68,11 +68,11 @@
 </Reference>
 <Reference URI="res%2Fedje%2Fimages%2Fstate_minus.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>yhRrSVjwgk+935jJKvUHIQC0W0rqfVwaPS4vkVzNeFs=</DigestValue>
+<DigestValue>oopHOLwX2erefPSmRL4OFUFZFruWbuAHXIIOfbbvlRY=</DigestValue>
 </Reference>
 <Reference URI="res%2Fedje%2Fimages%2Fstate_plus.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>DWrvSWljCsSmjO6vYK4DPeh8Wl8IMTD1tHzRmY9D81Y=</DigestValue>
+<DigestValue>e+1MzIY0mjleleGe7XdfHinaKQJqzNfEk4pYoFSyLIk=</DigestValue>
 </Reference>
 <Reference URI="shared%2Fres%2FMoneyWatchIcon.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -95,9 +95,9 @@
 </Reference>
 </SignedInfo>
 <SignatureValue>
-l4e0UFU0v9jHxhO2e5EoVWcSMz8cHA5l9I+QQTWNxUyOCHLmnhHrTpT38fIqrpo71fPRykzSBTP5
-EVVModhEoK+C09rGCzUGKZz43ksR2xX6TIahDUKJhx9PiMJ3VI3Iaxrqu34GvfghjgluZFsfCNJN
-005web32KTxFyqr33YY=
+LgFGVlYAF/t1h4QPt6b1EoTcOyU1cVUb7pLvE+Gf4AhzvW5SiaFm82VJ5TlZy6rgaeiJkr0n+DUV
+nOA7w0OkpC7OvAOg1yQFPnu/8ZtfS/0QSdfY4t0Iz8VK5xhC4V0+uo3gPnPt1J8qzQUSGqUisjRD
+F9E17TNeU2JoGI5ztOw=
 </SignatureValue>
 <KeyInfo>
 <X509Data>
