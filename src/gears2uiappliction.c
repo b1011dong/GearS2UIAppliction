@@ -14,6 +14,7 @@ typedef struct appdata{
 	Evas_Object* nf;
 	Evas_Object* entry;
 	Evas_Object **img;
+	Evas_Object *genlist_category;
 	Eext_Circle_Surface *circle_surface;
 } appdata_s;
 
@@ -471,7 +472,7 @@ create_main_view(appdata_s *ad)
 	elm_scroller_page_scroll_limit_set(scroller, 1, 0);
 	elm_object_scroll_lock_y_set(scroller, EINA_TRUE);
 	evas_object_show(scroller);
-	elm_grid_pack(grid, scroller, 42, 40, 30, 30);
+	elm_grid_pack(grid, scroller, 22, 20, 30, 30);
 
 	circle_scroller = eext_circle_object_scroller_add(scroller, ad->circle_surface);
 	eext_circle_object_scroller_policy_set(circle_scroller, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_OFF);

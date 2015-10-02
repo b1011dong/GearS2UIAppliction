@@ -4,7 +4,7 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
 <Reference URI="bin%2Fgears2uiappliction">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>GygtrCTjPGEUpTXXagnzNmESr0wgQckmkhCO//mSDeU=</DigestValue>
+<DigestValue>myLQfdqYKGwYDGzIl9MTbVaDl284C7GUvHygp5KFWyY=</DigestValue>
 </Reference>
 <Reference URI="res%2Fedje%2Fgears2uiappliction.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -87,9 +87,9 @@
 </Reference>
 </SignedInfo>
 <SignatureValue>
-V67V8a0A+bAbAkwoaWclD0yBwOgLbvhxFizebRU6q31RZatI1HFpGNvy8Z2WQd8IkPk9tyuL6+di
-ze535kkop3+A3+S+4qtgnmhRktx9l2btsFVWca4dTq6XG9HatW5pMNxPrHkithUB/O9BYH+9y2cj
-Z7zy+EaQnC+G6WTGg4Y=
+I4saYCAk5vPqucMRX8301RA0kOghIy1flUunmhclaCeHEX2Bu5Pz/SMv9b1qHTy4UvIaGLjfCjhH
+iBkqihZ9d47Mkj3fjC+9TBPI1Zs+r3wGFw1NI8oKT7FTHwEkZ9KzmVGRXskVDMtTZQZYSd0ds8au
+cpdh1Y8fDFqDU/OWvow=
 </SignatureValue>
 <KeyInfo>
 <X509Data>
