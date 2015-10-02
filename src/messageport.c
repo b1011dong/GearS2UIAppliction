@@ -50,7 +50,7 @@ bool test_check_remote_port(char *remote_app_id)
    bool found;
 
    i=0;
-   while(i<3 && ret)
+   while(i<3 && ret)//////////////////////////////////////////
    {
 	   ret = message_port_check_remote_port (remote_app_id, MESSAGE_PORT_FROM_UIAPP, &found);
 		if (ret != MESSAGE_PORT_ERROR_NONE) {
