@@ -7,6 +7,9 @@
 #define INOUT_BTN 10
 #define DEL_BTN 11
 
+#define CLOCK_WISE 0
+#define CLOCK_OTHERWISE 1
+
 typedef struct appdata{
 	Evas_Object* win;
 	Evas_Object* conform;
@@ -15,11 +18,87 @@ typedef struct appdata{
 	Evas_Object* entry;
 	Evas_Object **img;
 	Evas_Object *list;
+	Evas_Object *category_entry_mid;
+	Evas_Object *category_entry_left;
+	Evas_Object *category_entry_right;
 	Eext_Circle_Surface *circle_surface;
 } appdata_s;
 
+typedef struct _item_data
+{
+	int index;
+	Elm_Object_Item *item;
+} item_data;
+
+
+typedef struct list
+{
+	int index;
+	char catName[21];
+	struct list* next;
+	struct list* prev;
+}node;
+
+
 short inout_flag = 1; // 0: income, 1: outgo
 short confirm_flag = 0; // 0: default, 1: ready to confirm(send)
+double circle_prev = 0;
+node *category = NULL;
+int catCount = 0;
+
+static node*
+createNode()
+{
+	node *p = (node*)malloc(sizeof(node));
+
+	p->index = -1;
+	p->catName[0] = '\0';
+	p->next = NULL;
+	p->prev = NULL;
+
+	return p;
+}
+
+static void
+addNode(node** parent, char* catName)
+{
+	node *p;
+	node *temp = NULL;
+
+	if( strlen(catName) > 20)
+		return;
+
+	p = createNode();
+
+	if( !(*parent) )
+	{
+		p->index = 0;
+		strcpy( p->catName, catName);
+		p->next = p;
+		p->prev = p;
+
+		(*parent) = p;
+
+		return;
+	}
+
+	temp = (*parent);
+
+	while(temp->next != (*parent))
+		temp = temp->next;
+
+	p->index = (temp->index + 1);
+	strcpy( p->catName, catName);
+	p->next = temp->next;
+	p->next->prev = p;
+	p->prev = temp;
+	p->prev->next = p;
+	temp->next = p;
+}
+
+
+
+
 
 static void
 win_delete_request_cb(void *data, Evas_Object *obj, void *event_info)
@@ -360,21 +439,18 @@ img_clicked_inout_cb(void **data, Evas_Object *obj, void *event_info)
 	//Evas_Object *entry = data;
 	Evas_Object *entry;
 	Evas_Object *state_img;
+	Evas_Object *slider;
 	Evas_Object *img = obj;
 	char icon_path[PATH_MAX] = {0, };
 
 	entry = (Evas_Object*)data[0];
 	state_img = (Evas_Object*)data[1];
+	slider = (Evas_Object*)data[2];
 	//entry = (Evas_Object*)data;
 	//state_img = (Evas_Object*)data;
 
 	if(confirm_flag == READY_TO_CONFIRM)
 	{
-		/*if(inout_flag == INCOME)
-			elm_entry_text_style_user_push(entry, "DEFAULT='font_size=40 color=#4cffba align=center'");
-		else if(inout_flag == OUTGO)
-			elm_entry_text_style_user_push(entry, "DEFAULT='font_size=40 color=#ffffff align=center'");*/
-
 		elm_entry_text_style_user_push(entry, "DEFAULT='font_size=40 color=#ffffff align=center'");
 
 		confirm_flag = DEFAULT;
@@ -384,12 +460,13 @@ img_clicked_inout_cb(void **data, Evas_Object *obj, void *event_info)
 
 	if(inout_flag == INCOME) // change current state: income -> outgo
 	{
-		// elm_entry_text_style_user_push(entry, "DEFAULT='font_size=40 color=#ffffff align=center'");
 		app_get_resource("edje/images/button_plus.png", icon_path, (int)PATH_MAX);
 		elm_image_file_set(img, icon_path, NULL);
 
 		app_get_resource("edje/images/state_minus.png", icon_path, (int)PATH_MAX);
 		elm_image_file_set(state_img, icon_path, NULL);
+
+		eext_circle_object_color_set(slider, 255, 45, 10, 180);
 
 		inout_flag = 1;
 	}
@@ -401,6 +478,8 @@ img_clicked_inout_cb(void **data, Evas_Object *obj, void *event_info)
 
 		app_get_resource("edje/images/state_plus.png", icon_path, (int)PATH_MAX);
 		elm_image_file_set(state_img, icon_path, NULL);
+
+		eext_circle_object_color_set(slider, 9, 255, 154, 180);
 
 		inout_flag = 0;
 	}
@@ -431,9 +510,14 @@ confirm_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	Evas_Object *entry = obj;
 
+	if( strlen( elm_entry_entry_get(entry) ) == 0)
+	{
+		return;
+	}
+
 	if(confirm_flag == DEFAULT)
 	{
-		elm_entry_text_style_user_push(entry, "DEFAULT='font_size=50 color=#fe5968 align=center'");
+		elm_entry_text_style_user_push(entry, "DEFAULT='font_size=50 color=#ffea00 align=center'");
 		confirm_flag = READY_TO_CONFIRM;
 	}
 	else if(confirm_flag == READY_TO_CONFIRM)
@@ -443,10 +527,40 @@ confirm_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 	}
 }
 
-static void
-list_item_selected_cb(void *data, Evas_Object *obj, void *event_info)
-{
 
+// from here to below is for making general list
+static void
+_value_changed(void *data, Evas_Object *obj, void *event_info)
+{
+	appdata_s *ad = (appdata_s*)data;
+	Evas_Object *slider = obj;
+	int temp;
+
+	if( !category ) return;
+
+	if( circle_prev < eext_circle_object_value_get(slider) ) // clock wise
+	{
+		category = category->next;
+	}
+	else if( circle_prev > eext_circle_object_value_get(slider) ) // clock otherwise
+	{
+		category = category->prev;
+	}
+
+	circle_prev = eext_circle_object_value_get(slider);
+
+	temp = (int)eext_circle_object_value_get(slider);
+	eext_circle_object_value_set(slider, (double)temp);
+	/*
+	if( eext_circle_object_value_get(slider) < 1.0 )
+		eext_circle_object_value_set(slider, 0.0);
+	else if( eext_circle_object_value_get(slider) > (double)(catCount-1) )
+		eext_circle_object_value_set(slider, (double)(catCount));
+	*/
+
+	elm_entry_entry_set(ad->category_entry_mid, category->catName);
+	elm_entry_entry_set(ad->category_entry_left, category->prev->catName);
+	elm_entry_entry_set(ad->category_entry_right, category->next->catName);
 }
 
 /* 버튼 등의 기본 화면을 나타낼 것이다! */
@@ -462,9 +576,33 @@ create_main_view(appdata_s *ad)
 
 	Evas_Object *scroller = NULL;
 	Evas_Object *circle_scroller = NULL;
+	Evas_Object *circle_genlist = NULL;
+
+	Evas_Object *slider = NULL;
+
+	Elm_Genlist_Item_Class *itc = elm_genlist_item_class_new();
+	Elm_Genlist_Item_Class *ttc = elm_genlist_item_class_new();
+	Elm_Genlist_Item_Class *ptc = elm_genlist_item_class_new();
 
 	int i, j;
 	char icon_path[PATH_MAX] = {0, };
+
+	addNode(&category, "기본");
+	catCount++;
+	addNode(&category, "식사비");
+	catCount++;
+	addNode(&category, "쇼핑");
+	catCount++;
+	addNode(&category, "유흥비");
+	catCount++;
+	addNode(&category, "교통비");
+	catCount++;
+	addNode(&category, "축의금");
+	catCount++;
+	addNode(&category, "부조금");
+	catCount++;
+	addNode(&category, "용돈");
+	catCount++;
 
 	grid = elm_grid_add(ad->win);
 	evas_object_size_hint_weight_set(grid, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -473,39 +611,41 @@ create_main_view(appdata_s *ad)
 	evas_object_show(grid);
 
 
-	ad->list = elm_list_add(grid);
-	//elm_list_horizontal_set (ad->list, EINA_TRUE);
 
-	elm_list_item_append(ad->list, "a", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "bb", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "ccc", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaaaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "aaaaaaaa", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글한", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글한글", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글한글한", NULL, NULL, list_item_selected_cb, NULL);
-	elm_list_item_append(ad->list, "한글한글한글", NULL, NULL, list_item_selected_cb, NULL);
+	ad->category_entry_mid = elm_entry_add(grid);
+	elm_entry_editable_set(ad->category_entry_mid, EINA_FALSE);
+	elm_entry_single_line_set(ad->category_entry_mid, EINA_TRUE);
+	elm_entry_text_style_user_push(ad->category_entry_mid, "DEFAULT='font_size=40 color=#ffffff align=center'");
+	elm_entry_input_panel_layout_variation_set(ad->category_entry_mid, 5);
+	elm_entry_entry_set(ad->category_entry_mid, category->catName);
+	evas_object_show(ad->category_entry_mid);
+	elm_grid_pack(grid, ad->category_entry_mid, 30, 50, 40, 20);
 
-	evas_object_show(ad->list);
-	elm_grid_pack(grid, ad->list, 25, 56, 50, 12);
+	ad->category_entry_left = elm_entry_add(grid);
+	elm_entry_editable_set(ad->category_entry_left, EINA_FALSE);
+	elm_entry_single_line_set(ad->category_entry_left, EINA_TRUE);
+	elm_entry_text_style_user_push(ad->category_entry_left, "DEFAULT='font_size=20 color=#999999 align=center'");
+	elm_entry_entry_set(ad->category_entry_left, category->prev->catName);
+	evas_object_show(ad->category_entry_left);
+	elm_grid_pack(grid, ad->category_entry_left, 27, 60, 20, 20);
 
-/*
-	scroller = elm_scroller_add(ad->list);
-	elm_scroller_loop_set(scroller, EINA_FALSE, EINA_FALSE);
-	elm_scroller_page_size_set(scroller, 60, 0);
-	elm_scroller_page_scroll_limit_set(scroller, 1, 0);
-	elm_object_scroll_lock_y_set(scroller, EINA_TRUE);
-	evas_object_show(scroller);
-*/
+	ad->category_entry_right = elm_entry_add(grid);
+	elm_entry_editable_set(ad->category_entry_right, EINA_FALSE);
+	elm_entry_single_line_set(ad->category_entry_right, EINA_TRUE);
+	elm_entry_text_style_user_push(ad->category_entry_right, "DEFAULT='font_size=20 color=#999999 align=center'");
+	elm_entry_entry_set(ad->category_entry_right, category->next->catName);
+	evas_object_show(ad->category_entry_right);
+	elm_grid_pack(grid, ad->category_entry_right, 53, 60, 20, 20);
 
-	circle_scroller = eext_circle_object_scroller_add(ad->list, ad->circle_surface);
-	eext_circle_object_scroller_policy_set(circle_scroller, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_OFF);
-	eext_rotary_object_event_activated_set(circle_scroller, EINA_TRUE);
+
+	slider = eext_circle_object_slider_add(grid, ad->circle_surface);
+	eext_circle_object_color_set(slider, 255, 45, 10, 180);
+	eext_circle_object_value_min_max_set(slider, 0.0, (double)(catCount-1));
+	eext_rotary_object_event_activated_set(slider, EINA_TRUE);
+	eext_circle_object_slider_step_set(slider, 1.0);
+	evas_object_smart_callback_add(slider, "value,changed", _value_changed, ad);
+
+
 
 
 	ad->img = (Evas_Object**)malloc(sizeof(Evas_Object*) * 12);
@@ -594,12 +734,13 @@ create_main_view(appdata_s *ad)
 	elm_entry_text_style_user_push(ad->entry, "DEFAULT='font_size=40 color=#ffffff align=center'");
 	elm_entry_entry_set(ad->entry, "");
 	evas_object_show(ad->entry);
-	elm_grid_pack(grid, ad->entry, 25, 30, 50, 40);
+	elm_grid_pack(grid, ad->entry, 25, 27, 50, 40);
 
 	entry_w_image = (Evas_Object**)malloc(sizeof(Evas_Object*) * 2);
 
 	entry_w_image[0] = ad->entry;
 	entry_w_image[1] = state_img;
+	entry_w_image[2] = slider;
 
 	evas_object_smart_callback_add(ad->img[0], "clicked", img_clicked_0_cb, ad->entry);
 	evas_object_smart_callback_add(ad->img[1], "clicked", img_clicked_1_cb, ad->entry);

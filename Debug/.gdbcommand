@@ -1,4 +1,4 @@
 set sysroot C:\tizen-sdk\platforms\wearable-2.3.1\rootstraps\wearable-2.3.1-emulator.core
 set debug-file-directory C:\tizen-sdk\platforms\wearable-2.3.1\rootstraps\wearable-2.3.1-emulator.core\usr\lib\debug
-set solib-search-path C:\Users\Rev-12\workspace_tizen\GearS2UIAppliction\Debug
+set solib-search-path C:\Users\ParkDongwon\workspace\GearS2UIAppliction\Debug
 dir C:\tizen-sdk\platforms\wearable-2.3.1\rootstraps\wearable-2.3.1-emulator.core\usr\src\debug
