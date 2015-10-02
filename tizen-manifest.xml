@@ -5,5 +5,8 @@
         <label>Money Watcher</label>
         <icon>MoneyWatchIcon.png</icon>
     </ui-application>
+    <privileges>
+        <privilege>http://tizen.org/privilege/appmanager.launch</privilege>
+    </privileges>
     <feature name="http://tizen.org/feature/screen.size.normal.320.320">true</feature>
 </manifest>

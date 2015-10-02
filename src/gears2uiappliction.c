@@ -43,8 +43,10 @@ typedef struct list
 short inout_flag = 1; // 0: income, 1: outgo
 short confirm_flag = 0; // 0: default, 1: ready to confirm(send)
 double circle_prev = 0;
-node *category = NULL;
-int catCount = 0;
+node *category_in = NULL;
+node *category_out = NULL;
+int inCount = 0;
+int outCount = 0;
 
 static node*
 createNode()
@@ -441,11 +443,17 @@ img_clicked_inout_cb(void **data, Evas_Object *obj, void *event_info)
 	Evas_Object *state_img;
 	Evas_Object *slider;
 	Evas_Object *img = obj;
+	Evas_Object *entry_mid;
+	Evas_Object *entry_left;
+	Evas_Object *entry_right;
 	char icon_path[PATH_MAX] = {0, };
 
-	entry = (Evas_Object*)data[0];
+	entry = ((appdata_s*)(data[0]))->entry;
 	state_img = (Evas_Object*)data[1];
 	slider = (Evas_Object*)data[2];
+	entry_mid = ((appdata_s*)(data[0]))->category_entry_mid;
+	entry_left = ((appdata_s*)(data[0]))->category_entry_left;
+	entry_right = ((appdata_s*)(data[0]))->category_entry_right;
 	//entry = (Evas_Object*)data;
 	//state_img = (Evas_Object*)data;
 
@@ -467,8 +475,17 @@ img_clicked_inout_cb(void **data, Evas_Object *obj, void *event_info)
 		elm_image_file_set(state_img, icon_path, NULL);
 
 		eext_circle_object_color_set(slider, 255, 45, 10, 180);
+		eext_circle_object_value_min_max_set(slider, 0.0, (double)(outCount-1));
+		eext_circle_object_value_set(slider, 0.0);
 
-		inout_flag = 1;
+		while(category_out->index != 0)
+			category_out = category_out->next;
+
+		elm_entry_entry_set(entry_mid, category_out->catName);
+		elm_entry_entry_set(entry_left, category_out->prev->catName);
+		elm_entry_entry_set(entry_right, category_out->next->catName);
+
+		inout_flag = OUTGO;
 	}
 	else if(inout_flag == OUTGO) // change current state: outgo -> income
 	{
@@ -480,8 +497,17 @@ img_clicked_inout_cb(void **data, Evas_Object *obj, void *event_info)
 		elm_image_file_set(state_img, icon_path, NULL);
 
 		eext_circle_object_color_set(slider, 9, 255, 154, 180);
+		eext_circle_object_value_min_max_set(slider, 0.0, (double)(inCount-1));
+		eext_circle_object_value_set(slider, 0.0);
 
-		inout_flag = 0;
+		while(category_in->index != 0)
+				category_in = category_in->next;
+
+		elm_entry_entry_set(entry_mid, category_in->catName);
+		elm_entry_entry_set(entry_left, category_in->prev->catName);
+		elm_entry_entry_set(entry_right, category_in->next->catName);
+
+		inout_flag = INCOME;
 	}
 }
 static void
@@ -536,31 +562,50 @@ _value_changed(void *data, Evas_Object *obj, void *event_info)
 	Evas_Object *slider = obj;
 	int temp;
 
-	if( !category ) return;
-
-	if( circle_prev < eext_circle_object_value_get(slider) ) // clock wise
+	if( inout_flag == INCOME )
 	{
-		category = category->next;
+		if( !category_in ) return;
+
+		if( circle_prev < eext_circle_object_value_get(slider) ) // clock wise
+		{
+			category_in = category_in->next;
+		}
+		else if( circle_prev > eext_circle_object_value_get(slider) ) // clock otherwise
+		{
+			category_in = category_in->prev;
+		}
+
+		circle_prev = eext_circle_object_value_get(slider);
+
+		temp = (int)eext_circle_object_value_get(slider);
+		eext_circle_object_value_set(slider, (double)temp);
+
+		elm_entry_entry_set(ad->category_entry_mid, category_in->catName);
+		elm_entry_entry_set(ad->category_entry_left, category_in->prev->catName);
+		elm_entry_entry_set(ad->category_entry_right, category_in->next->catName);
 	}
-	else if( circle_prev > eext_circle_object_value_get(slider) ) // clock otherwise
+	else if( inout_flag == OUTGO )
 	{
-		category = category->prev;
+		if( !category_out ) return;
+
+		if( circle_prev < eext_circle_object_value_get(slider) ) // clock wise
+		{
+			category_out = category_out->next;
+		}
+		else if( circle_prev > eext_circle_object_value_get(slider) ) // clock otherwise
+		{
+			category_out = category_out->prev;
+		}
+
+		circle_prev = eext_circle_object_value_get(slider);
+
+		temp = (int)eext_circle_object_value_get(slider);
+		eext_circle_object_value_set(slider, (double)temp);
+
+		elm_entry_entry_set(ad->category_entry_mid, category_out->catName);
+		elm_entry_entry_set(ad->category_entry_left, category_out->prev->catName);
+		elm_entry_entry_set(ad->category_entry_right, category_out->next->catName);
 	}
-
-	circle_prev = eext_circle_object_value_get(slider);
-
-	temp = (int)eext_circle_object_value_get(slider);
-	eext_circle_object_value_set(slider, (double)temp);
-	/*
-	if( eext_circle_object_value_get(slider) < 1.0 )
-		eext_circle_object_value_set(slider, 0.0);
-	else if( eext_circle_object_value_get(slider) > (double)(catCount-1) )
-		eext_circle_object_value_set(slider, (double)(catCount));
-	*/
-
-	elm_entry_entry_set(ad->category_entry_mid, category->catName);
-	elm_entry_entry_set(ad->category_entry_left, category->prev->catName);
-	elm_entry_entry_set(ad->category_entry_right, category->next->catName);
 }
 
 /* 버튼 등의 기본 화면을 나타낼 것이다! */
@@ -587,22 +632,34 @@ create_main_view(appdata_s *ad)
 	int i, j;
 	char icon_path[PATH_MAX] = {0, };
 
-	addNode(&category, "기본");
-	catCount++;
-	addNode(&category, "식사비");
-	catCount++;
-	addNode(&category, "쇼핑");
-	catCount++;
-	addNode(&category, "유흥비");
-	catCount++;
-	addNode(&category, "교통비");
-	catCount++;
-	addNode(&category, "축의금");
-	catCount++;
-	addNode(&category, "부조금");
-	catCount++;
-	addNode(&category, "용돈");
-	catCount++;
+	addNode(&category_out, "기본");
+	outCount++;
+	addNode(&category_out, "식사비");
+	outCount++;
+	addNode(&category_out, "쇼핑");
+	outCount++;
+	addNode(&category_out, "유흥비");
+	outCount++;
+	addNode(&category_out, "교통비");
+	outCount++;
+	addNode(&category_out, "축의금");
+	outCount++;
+	addNode(&category_out, "부조금");
+	outCount++;
+	addNode(&category_out, "기부금");
+	outCount++;
+
+	addNode(&category_in, "기본");
+	inCount++;
+	addNode(&category_in, "용돈");
+	inCount++;
+	addNode(&category_in, "월급");
+	inCount++;
+	addNode(&category_in, "주웠다");
+	inCount++;
+	addNode(&category_in, "로또");
+	inCount++;
+
 
 	grid = elm_grid_add(ad->win);
 	evas_object_size_hint_weight_set(grid, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -617,7 +674,7 @@ create_main_view(appdata_s *ad)
 	elm_entry_single_line_set(ad->category_entry_mid, EINA_TRUE);
 	elm_entry_text_style_user_push(ad->category_entry_mid, "DEFAULT='font_size=40 color=#ffffff align=center'");
 	elm_entry_input_panel_layout_variation_set(ad->category_entry_mid, 5);
-	elm_entry_entry_set(ad->category_entry_mid, category->catName);
+	elm_entry_entry_set(ad->category_entry_mid, category_out->catName);
 	evas_object_show(ad->category_entry_mid);
 	elm_grid_pack(grid, ad->category_entry_mid, 30, 50, 40, 20);
 
@@ -625,7 +682,7 @@ create_main_view(appdata_s *ad)
 	elm_entry_editable_set(ad->category_entry_left, EINA_FALSE);
 	elm_entry_single_line_set(ad->category_entry_left, EINA_TRUE);
 	elm_entry_text_style_user_push(ad->category_entry_left, "DEFAULT='font_size=20 color=#999999 align=center'");
-	elm_entry_entry_set(ad->category_entry_left, category->prev->catName);
+	elm_entry_entry_set(ad->category_entry_left, category_out->prev->catName);
 	evas_object_show(ad->category_entry_left);
 	elm_grid_pack(grid, ad->category_entry_left, 27, 60, 20, 20);
 
@@ -633,14 +690,14 @@ create_main_view(appdata_s *ad)
 	elm_entry_editable_set(ad->category_entry_right, EINA_FALSE);
 	elm_entry_single_line_set(ad->category_entry_right, EINA_TRUE);
 	elm_entry_text_style_user_push(ad->category_entry_right, "DEFAULT='font_size=20 color=#999999 align=center'");
-	elm_entry_entry_set(ad->category_entry_right, category->next->catName);
+	elm_entry_entry_set(ad->category_entry_right, category_out->next->catName);
 	evas_object_show(ad->category_entry_right);
 	elm_grid_pack(grid, ad->category_entry_right, 53, 60, 20, 20);
 
 
 	slider = eext_circle_object_slider_add(grid, ad->circle_surface);
 	eext_circle_object_color_set(slider, 255, 45, 10, 180);
-	eext_circle_object_value_min_max_set(slider, 0.0, (double)(catCount-1));
+	eext_circle_object_value_min_max_set(slider, 0.0, (double)(outCount-1));
 	eext_rotary_object_event_activated_set(slider, EINA_TRUE);
 	eext_circle_object_slider_step_set(slider, 1.0);
 	evas_object_smart_callback_add(slider, "value,changed", _value_changed, ad);
@@ -736,9 +793,9 @@ create_main_view(appdata_s *ad)
 	evas_object_show(ad->entry);
 	elm_grid_pack(grid, ad->entry, 25, 27, 50, 40);
 
-	entry_w_image = (Evas_Object**)malloc(sizeof(Evas_Object*) * 2);
+	entry_w_image = (Evas_Object**)malloc(sizeof(Evas_Object*) * 4);
 
-	entry_w_image[0] = ad->entry;
+	entry_w_image[0] = ad;
 	entry_w_image[1] = state_img;
 	entry_w_image[2] = slider;
 

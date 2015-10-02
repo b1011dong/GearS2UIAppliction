@@ -20,7 +20,7 @@ char *current_time()
 {
 	time_t timer;
 	struct tm *t;
-	char buf[20]={0,};
+	char *buf=(char *)malloc(sizeof(char)*20);
 
 	timer = time(NULL); // 현재 시각을 초 단위로 얻기
 
@@ -49,24 +49,17 @@ void mod_create_app(char *app_path)
 // 포트가 열려있는지 확인하고 포트 안열려있으면 앱 시작시키는 함수
 bool test_check_remote_port(char *remote_app_id)
 {
-   int ret=1;
-   int i;
+   int ret;
    bool found;
 
-   i=0;
-   while(i<3 && ret)//////////////////////////////////////////
-   {
-	   ret = message_port_check_remote_port (remote_app_id, MESSAGE_PORT_FROM_UIAPP, &found);
-		if (ret != MESSAGE_PORT_ERROR_NONE) {
-			dlog_print(DLOG_ERROR, "TAG",
-					"message_port_check_remote_port error : %d", ret);
-			mod_create_app("org.example.yjservice");
-		}
-		else {
-			break;
-		}
-		i++;
-   }
+	ret = message_port_check_remote_port(remote_app_id, MESSAGE_PORT_FROM_UIAPP,
+			&found);
+	if (ret != MESSAGE_PORT_ERROR_NONE) {
+		dlog_print(DLOG_ERROR, "TAG",
+				"message_port_check_remote_port error : %d", ret);
+		mod_create_app("org.example.yjservice");
+	}
+
    return found;
 }
 // Service에 메세지 전달하는 함수
