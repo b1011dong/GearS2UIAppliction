@@ -31,7 +31,8 @@ layout_back_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	appdata_s *ad = data;
 	/* Let window go to hide state. */
-	elm_win_lower(ad->win);
+	//elm_win_lower(ad->win);
+	ui_app_exit();
 }
 
 static void
@@ -47,26 +48,6 @@ app_get_resource(const char *edj_file_in, char *edj_path_out, int edj_path_max)
 static void
 adjust_string(Evas_Object *entry)
 {
-	/*const char *temp;
-	char *ch = NULL;
-	char tempCh;
-	int len;
-	int i, j;
-
-	temp = elm_entry_entry_get(entry);
-	if (!temp) return;
-	ch = strdup(temp);
-
-	len = strlen(ch);
-
-	for(i = len-1; i > len-3; i--)
-	{
-		tempCh = ch[i];
-		ch[i] = ch[i - 1];
-		ch[i - 1] = tempCh;
-	}
-
-	elm_entry_entry_set(entry, ch);*/
 }
 
 static void
@@ -484,12 +465,13 @@ create_main_view(appdata_s *ad)
 	evas_object_show(grid);
 
 
-	scroller = elm_scroller_add(ad->win);
+	scroller = elm_scroller_add(grid);
 	elm_scroller_loop_set(scroller, EINA_FALSE, EINA_FALSE);
 	elm_scroller_page_size_set(scroller, 60, 0);
 	elm_scroller_page_scroll_limit_set(scroller, 1, 0);
 	elm_object_scroll_lock_y_set(scroller, EINA_TRUE);
 	evas_object_show(scroller);
+	elm_grid_pack(grid, scroller, 42, 40, 30, 30);
 
 	circle_scroller = eext_circle_object_scroller_add(scroller, ad->circle_surface);
 	eext_circle_object_scroller_policy_set(circle_scroller, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_OFF);
@@ -628,6 +610,7 @@ create_base_gui(appdata_s *ad)
 	evas_object_size_hint_weight_set(ad->conform, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_size_hint_align_set(ad->conform, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	elm_win_resize_object_add(ad->win, ad->conform);
+	eext_object_event_callback_add(ad->conform, EEXT_CALLBACK_BACK, layout_back_cb, ad);
 	evas_object_show(ad->conform);
 
 	// Eext Circle Surface Creation
