@@ -470,6 +470,10 @@ create_main_view(appdata_s *ad)
 	Evas_Object *grid;
 	Evas_Object *state_img;
 	Evas_Object **entry_w_image;
+
+	Evas_Object *scroller = NULL;
+	Evas_Object *circle_scroller = NULL;
+
 	int i, j;
 	char icon_path[PATH_MAX] = {0, };
 
@@ -478,6 +482,19 @@ create_main_view(appdata_s *ad)
 	evas_object_size_hint_align_set(grid, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	elm_object_content_set(ad->conform, grid);
 	evas_object_show(grid);
+
+
+	scroller = elm_scroller_add(ad->win);
+	elm_scroller_loop_set(scroller, EINA_FALSE, EINA_FALSE);
+	elm_scroller_page_size_set(scroller, 60, 0);
+	elm_scroller_page_scroll_limit_set(scroller, 1, 0);
+	elm_object_scroll_lock_y_set(scroller, EINA_TRUE);
+	evas_object_show(scroller);
+
+	circle_scroller = eext_circle_object_scroller_add(scroller, ad->circle_surface);
+	eext_circle_object_scroller_policy_set(circle_scroller, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_OFF);
+	eext_rotary_object_event_activated_set(circle_scroller, EINA_TRUE);
+
 
 	ad->img = (Evas_Object**)malloc(sizeof(Evas_Object*) * 12);
 
@@ -612,6 +629,9 @@ create_base_gui(appdata_s *ad)
 	evas_object_size_hint_align_set(ad->conform, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	elm_win_resize_object_add(ad->win, ad->conform);
 	evas_object_show(ad->conform);
+
+	// Eext Circle Surface Creation
+	ad->circle_surface = eext_circle_surface_conformant_add(ad->conform);
 
 	create_main_view(ad);
 
