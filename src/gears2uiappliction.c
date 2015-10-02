@@ -14,7 +14,7 @@ typedef struct appdata{
 	Evas_Object* nf;
 	Evas_Object* entry;
 	Evas_Object **img;
-	Evas_Object *genlist_category;
+	Evas_Object *list;
 	Eext_Circle_Surface *circle_surface;
 } appdata_s;
 
@@ -442,6 +442,12 @@ confirm_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 	}
 }
 
+static void
+list_item_selected_cb(void *data, Evas_Object *obj, void *event_info)
+{
+
+}
+
 /* 버튼 등의 기본 화면을 나타낼 것이다! */
 static void
 create_main_view(appdata_s *ad)
@@ -466,15 +472,37 @@ create_main_view(appdata_s *ad)
 	evas_object_show(grid);
 
 
-	scroller = elm_scroller_add(grid);
+	ad->list = elm_list_add(grid);
+	//elm_list_horizontal_set (ad->list, EINA_TRUE);
+
+	elm_list_item_append(ad->list, "a", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "bb", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "ccc", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "aaaa", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "aaaaa", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "aaaaaa", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "aaaaaaa", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "aaaaaaaa", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "한", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "한글", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "한글한", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "한글한글", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "한글한글한", NULL, NULL, list_item_selected_cb, NULL);
+	elm_list_item_append(ad->list, "한글한글한글", NULL, NULL, list_item_selected_cb, NULL);
+
+	evas_object_show(ad->list);
+	elm_grid_pack(grid, ad->list, 25, 56, 50, 12);
+
+/*
+	scroller = elm_scroller_add(ad->list);
 	elm_scroller_loop_set(scroller, EINA_FALSE, EINA_FALSE);
 	elm_scroller_page_size_set(scroller, 60, 0);
 	elm_scroller_page_scroll_limit_set(scroller, 1, 0);
 	elm_object_scroll_lock_y_set(scroller, EINA_TRUE);
 	evas_object_show(scroller);
-	elm_grid_pack(grid, scroller, 22, 20, 30, 30);
+*/
 
-	circle_scroller = eext_circle_object_scroller_add(scroller, ad->circle_surface);
+	circle_scroller = eext_circle_object_scroller_add(ad->list, ad->circle_surface);
 	eext_circle_object_scroller_policy_set(circle_scroller, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_OFF);
 	eext_rotary_object_event_activated_set(circle_scroller, EINA_TRUE);
 
