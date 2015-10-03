@@ -36,8 +36,6 @@ char *current_time()
 void mod_create_app(char *app_path)
 {
 	app_control_h app_control;
-	dlog_print(DLOG_ERROR, "TAG",
-					"ㅁㄴㅇㄹ");
 	app_control_create(&app_control);
 	app_control_set_operation(app_control, APP_CONTROL_OPERATION_DEFAULT);
 	app_control_set_app_id(app_control, app_path);

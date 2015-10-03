@@ -9,7 +9,7 @@
 
 #define CLOCK_WISE 0
 #define CLOCK_OTHERWISE 1
-
+#define MAX_PATH 260
 typedef struct appdata{
 	Evas_Object* win;
 	Evas_Object* conform;
@@ -551,7 +551,10 @@ confirm_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 	else if(confirm_flag == READY_TO_CONFIRM)
 	{
 		/* confirm */
-		send_used_money_message("org.example.yjservice", atoi(elm_entry_entry_get(entry)), "default");
+		if(inout_flag == INCOME)
+			send_used_money_message("org.example.yjservice", atoi(elm_entry_entry_get(entry)), category_in->catName);
+		else
+			send_used_money_message("org.example.yjservice", atoi(elm_entry_entry_get(entry)), category_out->catName);
 	}
 }
 
@@ -873,7 +876,7 @@ app_create(void *data)
 	   If this function returns false, the application is terminated */
 	appdata_s *ad = data;
 
-	char file_path[RES_PATH_MAX];
+	char file_path[PATH_MAX];
 
 	create_base_gui(ad);
 	if (!test_check_remote_port("org.example.yjservice"))

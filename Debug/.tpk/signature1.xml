@@ -4,15 +4,15 @@
 <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
 <Reference URI="author-signature.xml">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>lUiHtlwOxGcr4X8Ya928bA8WJOKO+EpQ4l99jWazaCI=</DigestValue>
+<DigestValue>9O5siY3K66Y7OzBAW5Pod1pgGJwHP7sTq2AqZQ8NAwY=</DigestValue>
 </Reference>
 <Reference URI="bin%2Fgears2uiappliction">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>fOW1MnVHtDDB97T8LJ8fCC451Wu4X0VcUUd90fTf5GM=</DigestValue>
+<DigestValue>aBpQZ0a4oEFHgtCqcy8oIx++/SGtz0eazVr5yKkIiTU=</DigestValue>
 </Reference>
 <Reference URI="res%2Fedje%2Fgears2uiappliction.edj">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
-<DigestValue>/2lenkscEQ9MvNACRMTcq4n2yx/yv914+9lOsYpDcuk=</DigestValue>
+<DigestValue>jQu/3HW+4FXXXxRgveRE5tZKTGdMKZ8zsoi2Lux6FOI=</DigestValue>
 </Reference>
 <Reference URI="res%2Fedje%2Fimages%2Fbutton_0.png">
 <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></DigestMethod>
@@ -95,9 +95,9 @@
 </Reference>
 </SignedInfo>
 <SignatureValue>
-JhRR6Sn0j4okJI1/P8IzPsUsrbIQQ24UeTYTNPQVDHwzrVr26PoxJLnU+1KkLyBG4M9gt2jLYHR0
-aIIzFQAXJeuAL2pbo167tjsc7DVcPLWGwrxvYJu7EFmzPjpjl5gNZ9cwMiWgjvLBY8/C3bw3hvka
-b/RO/Q7YKsUMBuH/Ju8=
+dW+itr37Q1rUy4zW/j/wXpRspInu1JO3d1lJVswIX9ljfsNmk8CVyo80uajWeETnTuK4zQNusJKd
+81Kj+LZYytUcKAld6arD/BAXHJ8FL7QlfH9CihsllL5mcHopcZt8VrXBf/aPqMiPa7Xu396XSvbY
+ssyAaew6KbkaUXTtoPU=
 </SignatureValue>
 <KeyInfo>
 <X509Data>
