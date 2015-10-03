@@ -48,6 +48,8 @@ node *category_out = NULL;
 int inCount = 0;
 int outCount = 0;
 
+txtForm *read_data;		// 파일에서 읽은 데이터
+
 static node*
 createNode()
 {
@@ -871,10 +873,16 @@ app_create(void *data)
 	   If this function returns false, the application is terminated */
 	appdata_s *ad = data;
 
-	create_base_gui(ad);
+	char file_path[RES_PATH_MAX];
 
-	if(!test_check_remote_port("org.example.yjservice"))
+	create_base_gui(ad);
+	if (!test_check_remote_port("org.example.yjservice"))
 		mod_create_app("org.example.yjservice");
+
+	mod_get_shared_folder("mwdata.txt", file_path);
+	read_data = mod_read_file(file_path);
+
+
 	return true;
 }
 
