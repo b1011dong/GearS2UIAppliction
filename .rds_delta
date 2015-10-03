@@ -4,7 +4,3 @@
 author-signature.xml
 signature1.xml
 bin/gears2uiappliction
-res/edje/images/state_minus.png
-res/edje/images/state_plus.png
-shared/res/MoneyWatchIcon.png
-tizen-manifest.xml

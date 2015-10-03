@@ -873,6 +873,8 @@ app_create(void *data)
 
 	create_base_gui(ad);
 
+	if(!test_check_remote_port("org.example.yjservice"))
+		mod_create_app("org.example.yjservice");
 	return true;
 }
 
@@ -880,7 +882,9 @@ static void
 app_control(app_control_h app_control, void *data)
 {
 	/* Handle the launch request. */
-	test_check_remote_port("org.example.yjservice");
+	if(!test_check_remote_port("org.example.yjservice"))
+		mod_create_app("org.example.yjservice");
+
 }
 
 static void

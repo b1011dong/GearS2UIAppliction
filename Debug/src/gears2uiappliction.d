@@ -1,5 +1,5 @@
 src/gears2uiappliction.d: ../src/gears2uiappliction.c \
-  C:\Users\ParkDongwon\workspace\GearS2UIAppliction\inc\gears2uiappliction.h \
+  C:\Users\SON\Documents\GearS2UIAppliction\inc\gears2uiappliction.h \
   C:/tizen-sdk/tools/smart-build-interface/../../platforms/wearable-2.3.1/rootstraps/wearable-2.3.1-device.core/usr/include/appfw\app.h \
   C:/tizen-sdk/tools/smart-build-interface/../../platforms/wearable-2.3.1/rootstraps/wearable-2.3.1-device.core/usr/include/appfw\app_control.h \
   C:/tizen-sdk/tools/smart-build-interface/../../platforms/wearable-2.3.1/rootstraps/wearable-2.3.1-device.core/usr/include/appfw\app_common.h \
@@ -220,9 +220,9 @@ src/gears2uiappliction.d: ../src/gears2uiappliction.c \
   C:/tizen-sdk/tools/smart-build-interface/../../platforms/wearable-2.3.1/rootstraps/wearable-2.3.1-device.core/usr/include/efl-extension/common/efl_extension_rotary_selector.h \
   C:/tizen-sdk/tools/smart-build-interface/../../platforms/wearable-2.3.1/rootstraps/wearable-2.3.1-device.core/usr/include/efl-extension/common/efl_extension_more_option.h \
   C:/tizen-sdk/tools/smart-build-interface/../../platforms/wearable-2.3.1/rootstraps/wearable-2.3.1-device.core/usr/include/dlog\dlog.h \
-  C:\Users\ParkDongwon\workspace\GearS2UIAppliction\inc/s_txtform.h
+  C:\Users\SON\Documents\GearS2UIAppliction\inc/s_txtform.h
 
-C:\Users\ParkDongwon\workspace\GearS2UIAppliction\inc\gears2uiappliction.h:
+C:\Users\SON\Documents\GearS2UIAppliction\inc\gears2uiappliction.h:
 
 C:/tizen-sdk/tools/smart-build-interface/../../platforms/wearable-2.3.1/rootstraps/wearable-2.3.1-device.core/usr/include/appfw\app.h:
 
@@ -664,4 +664,4 @@ C:/tizen-sdk/tools/smart-build-interface/../../platforms/wearable-2.3.1/rootstra
 
 C:/tizen-sdk/tools/smart-build-interface/../../platforms/wearable-2.3.1/rootstraps/wearable-2.3.1-device.core/usr/include/dlog\dlog.h:
 
-C:\Users\ParkDongwon\workspace\GearS2UIAppliction\inc/s_txtform.h:
+C:\Users\SON\Documents\GearS2UIAppliction\inc/s_txtform.h:

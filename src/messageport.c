@@ -32,10 +32,12 @@ char *current_time()
 	dlog_print(DLOG_INFO, "tag", "date_buf : %s",buf);
 	return buf;
 }
-// 앱 켜는 함수 (서비스 앱 켤때 사용)
+// 앱 시작 함수 (서비스 앱 켤때 사용)
 void mod_create_app(char *app_path)
 {
 	app_control_h app_control;
+	dlog_print(DLOG_ERROR, "TAG",
+					"ㅁㄴㅇㄹ");
 	app_control_create(&app_control);
 	app_control_set_operation(app_control, APP_CONTROL_OPERATION_DEFAULT);
 	app_control_set_app_id(app_control, app_path);
@@ -47,20 +49,27 @@ void mod_create_app(char *app_path)
 	app_control_destroy(app_control);
 }
 // 포트가 열려있는지 확인하고 포트 안열려있으면 앱 시작시키는 함수
-bool test_check_remote_port(char *remote_app_id)
-{
-   int ret;
-   bool found;
+bool test_check_remote_port(char *remote_app_id) {
+	int ret;
+	bool found;
+	dlog_print(DLOG_ERROR, "TAG",
+			"%s", __func__);
 
 	ret = message_port_check_remote_port(remote_app_id, MESSAGE_PORT_FROM_UIAPP,
 			&found);
 	if (ret != MESSAGE_PORT_ERROR_NONE) {
 		dlog_print(DLOG_ERROR, "TAG",
-				"message_port_check_remote_port error : %d", ret);
-		mod_create_app("org.example.yjservice");
+				"%s - message_port_check_remote_port error : %d", __func__,ret);
+
+	}
+	else
+	{
+		dlog_print(DLOG_ERROR, "TAG",
+						"check success");
+
 	}
 
-   return found;
+	return found;
 }
 // Service에 메세지 전달하는 함수
 void send_used_money_message(char *remote_app_id,int used_money, char *used_category)
@@ -77,7 +86,7 @@ void send_used_money_message(char *remote_app_id,int used_money, char *used_cate
    ret = message_port_send_message (remote_app_id, MESSAGE_PORT_FROM_UIAPP, b);
    if (ret != MESSAGE_PORT_ERROR_NONE)
    {
-      dlog_print(DLOG_ERROR, "TAG", "message_port_check_remote_port error : %d", ret);
+      dlog_print(DLOG_ERROR, "TAG", "%s - message_port_check_remote_port error : %d",__func__, ret);
    }
    else
    {

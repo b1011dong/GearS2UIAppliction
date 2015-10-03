@@ -26,6 +26,7 @@
 
 bool test_check_remote_port(char *remote_app_id);
 void send_used_money_message(char *remote_app_id,int used_money, char *used_category);
+void mod_create_app(char *app_path);
 
 txtForm *mod_read_file(char *dest);
 static void mod_get_shared_folder(const char *res_file_in 	// file 이름 받아옴
